@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="To Do List Life Dashboard — your personal productivity hub" />
+  <title>Life Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ============================================================
+       MAIN DASHBOARD LAYOUT
+       ============================================================ -->
+  <main class="dashboard" role="main">
+
+    <!-- ──────────────────────────────────────────
+         GREETING CARD
+         ────────────────────────────────────────── -->
+    <section class="card greeting-card" aria-label="Greeting and clock">
+      <div class="greeting-left">
+        <div class="greeting-name-wrap">
+          <h1 class="greeting-text" id="greeting-text">👋 <span>Hello</span>, there!</h1>
+          <button class="greeting-edit-btn" id="greeting-edit-btn" aria-label="Edit your name" title="Edit name">
+            ✏️ <span>Edit name</span>
+          </button>
+        </div>
+
+        <!-- Inline name editor (hidden until edit button is clicked) -->
+        <div class="greeting-name-editor" id="greeting-name-editor" hidden>
+          <input
+            type="text"
+            id="greeting-name-input"
+            class="greeting-name-input"
+            placeholder="Enter your name…"
+            maxlength="40"
+            autocomplete="off"
+            aria-label="Your name"
+          />
+          <button class="btn btn-primary btn-sm"   id="greeting-name-save"   aria-label="Save name">Save</button>
+          <button class="btn btn-secondary btn-sm" id="greeting-name-cancel" aria-label="Cancel editing">Cancel</button>
+        </div>
+
+        <p class="greeting-sub" id="greeting-sub">What are you focusing on today?</p>
+      </div>
+      <div class="greeting-right">
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark mode" title="Toggle theme">
+          <span id="theme-icon">☀️</span>
+          <span id="theme-label">Light Mode</span>
+        </button>
+        <div class="clock" id="clock" aria-live="polite" aria-label="Current time">00:00:00 AM</div>
+        <div class="date-display" id="date-display" aria-label="Current date"></div>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────
+         FOCUS TIMER CARD
+         ────────────────────────────────────────── -->
+    <section class="card timer-card" aria-label="Focus timer">
+      <h2 class="card-title">Focus Timer</h2>
+
+      <!-- SVG ring timer -->
+      <div class="timer-ring-wrap">
+        <div class="timer-ring" role="timer" aria-label="Pomodoro timer">
+          <svg class="timer-svg" viewBox="0 0 200 200" aria-hidden="true">
+            <circle class="timer-bg-circle"       cx="100" cy="100" r="80" />
+            <circle class="timer-progress-circle" cx="100" cy="100" r="80"
+              id="timer-progress"
+              stroke-dasharray="502"
+              stroke-dashoffset="0" />
+          </svg>
+          <div class="timer-display">
+            <div class="timer-time" id="timer-time">25:00</div>
+            <div class="timer-label">minutes</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Duration selector -->
+      <div class="timer-duration" role="group" aria-label="Focus duration">
+        <span class="timer-duration-label">Duration</span>
+        <div class="timer-duration-options" id="timer-duration-options">
+          <button class="duration-btn" data-minutes="15" aria-label="15 minutes">15m</button>
+          <button class="duration-btn active" data-minutes="25" aria-label="25 minutes">25m</button>
+          <button class="duration-btn" data-minutes="30" aria-label="30 minutes">30m</button>
+          <button class="duration-btn" data-minutes="45" aria-label="45 minutes">45m</button>
+          <button class="duration-btn" data-minutes="60" aria-label="60 minutes">60m</button>
+        </div>
+      </div>
+
+      <!-- Session badge -->
+      <div class="timer-mode-badge">
+        <span id="timer-mode-badge">Focus Mode</span>
+      </div>
+
+      <!-- Controls -->
+      <div class="timer-controls">
+        <button class="btn btn-primary"   id="timer-start" aria-label="Start or pause timer">▶ Start</button>
+        <button class="btn btn-secondary" id="timer-stop"  aria-label="Stop timer" disabled>⏹ Stop</button>
+        <button class="btn btn-secondary" id="timer-reset" aria-label="Reset timer">↺ Reset</button>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────
+         TO-DO LIST CARD
+         ────────────────────────────────────────── -->
+    <section class="card todo-card" aria-label="To-do list">
+      <h2 class="card-title">To-Do List</h2>
+
+      <!-- Add task -->
+      <div class="todo-input-row">
+        <label for="todo-input" class="sr-only">New task</label>
+        <input
+          type="text"
+          id="todo-input"
+          class="todo-input"
+          placeholder="Add a new task…"
+          maxlength="200"
+          aria-label="New task input"
+        />
+        <button class="btn btn-primary" id="todo-add-btn" aria-label="Add task">+ Add</button>
+      </div>
+
+      <!-- Filters + Sort -->
+      <div class="todo-filters" role="group" aria-label="Task filters">
+        <button class="filter-btn active" data-filter="all"    aria-pressed="true">All</button>
+        <button class="filter-btn"        data-filter="active" aria-pressed="false">Active</button>
+        <button class="filter-btn"        data-filter="done"   aria-pressed="false">Done</button>
+        <div class="todo-filter-right">
+          <span class="todo-stats" id="todo-stats" aria-live="polite"></span>
+          <label for="todo-sort" class="sr-only">Sort tasks</label>
+          <select id="todo-sort" class="todo-sort-select" aria-label="Sort tasks">
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="az">A → Z</option>
+            <option value="za">Z → A</option>
+            <option value="incomplete">Incomplete first</option>
+            <option value="complete">Completed first</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Task list -->
+      <ul class="todo-list" id="todo-list" aria-label="Task list"></ul>
+    </section>
+
+    <!-- ──────────────────────────────────────────
+         QUICK LINKS CARD
+         ────────────────────────────────────────── -->
+    <section class="card links-card" aria-label="Quick links">
+      <div class="links-header">
+        <h2 class="card-title" style="margin-bottom:0">Quick Links</h2>
+        <button class="btn btn-primary" id="add-link-btn" aria-label="Add new quick link">+ Add Link</button>
+      </div>
+
+      <!-- Links grid -->
+      <div class="links-grid" id="links-grid" role="list" aria-label="Saved quick links"></div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       ADD LINK MODAL
+       ============================================================ -->
+  <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal">
+      <h3 id="modal-title">Add Quick Link</h3>
+
+      <label for="modal-link-label">Label</label>
+      <input
+        type="text"
+        id="modal-link-label"
+        placeholder="e.g. GitHub"
+        maxlength="40"
+        autocomplete="off"
+      />
+
+      <label for="modal-link-url">URL</label>
+      <input
+        type="url"
+        id="modal-link-url"
+        placeholder="e.g. https://github.com"
+        autocomplete="off"
+      />
+
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="modal-cancel-btn">Cancel</button>
+        <button class="btn btn-primary"   id="modal-save-btn">Save Link</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       TOAST CONTAINER
+       ============================================================ -->
+  <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Screen-reader only helper class -->
+  <style>.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}</style>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
